@@ -20,24 +20,31 @@ import axios from "axios";
    
     let navigate = useNavigate();
 
-    const updateBook = ()=>{
-      axios.get(`http://localhost:4000/books/updatebook/${id}`,)
-      .then((res)=>{
-         console.log(res.data);
-         setBook(res.data[0]);
-        })
-      .catch((err)=>{console.log(err);}) 
-      // window.location.reload();
-
+    const fetchData =  async()=>{
+         let res = await fetch(`http://localhost:4000/books/updatebook/preData/${id}`);
+         let resData = await res.json();
+         console.log(resData);
+         setBook(resData[0]);
     }
 
-    const onSubmitHandler = (e)=>{
+    // const updateBook = ()=>{
+    //   axios.get(`http://localhost:4000/books/updatebook/${id}`,)
+    //   .then((res)=>{
+    //    //  console.log(res.data);
+    //      setBook(res.data[0]);
+    //     })
+    //   .catch((err)=>{console.log(err);}) 
+    //   // window.location.reload();
+
+    // }
+
+    const onSubmitHandler = async (e)=>{
              e.preventDefault();
-             axios.put(`http://localhost:4000/books/updatebook/${id}`,{
+            axios.put(`http://localhost:4000/books/updatebook/${id}`,{
               name: book.name , description:book.description , price: book.price
             })
             .then((res)=>{
-               console.log(res.data);
+             //  console.log(res.data);
                setBook(res.data[0]);
               })
             .catch((err)=>{console.log(err);}) 
@@ -55,13 +62,14 @@ import axios from "axios";
     }
 
     useEffect(()=>{
-      updateBook()
+    //  updateBook();
+      fetchData();
     },[])
 
 
     
 
-    console.log(book);
+   // console.log(book);
 
   return (
     <div>
@@ -70,11 +78,11 @@ import axios from "axios";
       <div className='' >
         <form action="" onSubmit={onSubmitHandler} className='flex flex-col w-[30vw] mx-auto mt-10'>
             <label htmlFor="" >name</label>
-            <input type="text" required className='border-2 p-2 text-black'  onChange={changedata}  value={book.name} placeholder='name of book..' name="name" id="" />
+            <input type="text" minLength={5} maxLength={20} required className='border-2 p-2 text-black'  onChange={changedata}  value={book.name} placeholder='name of book..' name="name" id="" />
             <label htmlFor="" className='mt-3' >Description</label>
             <textarea name="description" required className='border-2 p-2' id="" onChange={changedata} value={book.description} placeholder='desc of book..' cols="40" rows="4"></textarea>
-            <label htmlFor="" className='mt-3'>Price</label>
-            <input type="text" className='border-2 p-2' onChange={changedata} name="price" value={book.price} placeholder='price of book' id="" />
+            <label htmlFor="" minLength={10} maxLength={255} className='mt-3'>Price</label>
+            <input type="number" min={0} max={600} className='border-2 p-2' onChange={changedata} name="price" value={book.price} placeholder='price of book' id="" />
 
             <button className='mt-3 text-white border-2 border-blue-500 bg-blue-500 transition-all hover:bg-blue-600 px-3 py-2' type='submit' >Submit</button>
 

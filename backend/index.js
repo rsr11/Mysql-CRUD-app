@@ -81,6 +81,23 @@ app.delete("/books/deletebook/:id", async(req,res)=>{
 })
 
 
+
+app.get("/books/updatebook/preData/:id",(req,res)=>{
+    let id = req.params.id;
+    let value = [id];
+
+    db.query("select name,description,price from books where book_id = ?",value,(err,data)=>{
+        if(err){
+            console.error("error in sending data of given id");
+            return;
+        }
+        res.send(data);
+        console.log("specific data has been sended!");
+    })
+})
+
+
+
 app.get("/books/updatebook/:id", (req,res)=>{
    
     let selectedBook = req.params.id;
